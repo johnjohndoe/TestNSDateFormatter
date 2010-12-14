@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'TestDateFormatter' target in the 'TestDateFormatter' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

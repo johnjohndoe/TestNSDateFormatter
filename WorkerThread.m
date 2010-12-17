@@ -7,7 +7,7 @@
 - (id)init {
 	self = [super init];
 	if (self != nil) {
-		m_includeDateFormatter = NO;
+		m_formatterType = NoNSDateFormatter;
 		m_syncObject = nil;
 		m_syncFunction = nil;
 		m_worker = nil;
@@ -17,10 +17,10 @@
 	return self;
 }
 
-- (id)initWithDateFormatter:(BOOL)includeDateFormatter andSyncObject:(id)syncObject andSyncFunction:(SEL)syncFunction {
+- (id)initWithDateFormatter:(FormatterType)formatterType andSyncObject:(id)syncObject andSyncFunction:(SEL)syncFunction {
 	self = [self init];
 	if (self != nil) {
-		m_includeDateFormatter = includeDateFormatter;
+		m_formatterType = formatterType;
 		m_syncObject = syncObject;
 		m_syncFunction = syncFunction;
 	}
@@ -34,23 +34,48 @@
 	if (!m_worker)
 		m_worker = [[Worker alloc] init];
 	
-	if (m_includeDateFormatter) {
-		for (int i = 0; i < m_numWorkers; ++i) {
-			double start = ({struct timeval v; gettimeofday(&v, NULL); (double)(v.tv_sec*1000.+v.tv_usec*0.001);});
-			done = [m_worker workWithDateFormater];
-			double stop = ({struct timeval v; gettimeofday(&v, NULL); (double)(v.tv_sec*1000.+v.tv_usec*0.001);});
-			m_sum += stop - start;
-		}
+	
+	switch (m_formatterType) {
+		case NoNSDateFormatter:
+			for (int i = 0; i < m_numWorkers; ++i) {
+				double start = ({struct timeval v; gettimeofday(&v, NULL); (double)(v.tv_sec*1000.+v.tv_usec*0.001);});
+				done = [m_worker workWithoutDateFormater];
+				double stop = ({struct timeval v; gettimeofday(&v, NULL); (double)(v.tv_sec*1000.+v.tv_usec*0.001);});
+				m_sum += stop - start;
+			}	
+			break;
+			
+		case NSDateFormatterInit:
+			for (int i = 0; i < m_numWorkers; ++i) {
+				double start = ({struct timeval v; gettimeofday(&v, NULL); (double)(v.tv_sec*1000.+v.tv_usec*0.001);});
+				done = [m_worker workWithDateFormatterInit];
+				double stop = ({struct timeval v; gettimeofday(&v, NULL); (double)(v.tv_sec*1000.+v.tv_usec*0.001);});
+				m_sum += stop - start;
+			}
+			break;
+						
+		case NSDateFormatterInitWithDateFormat10_0:
+			for (int i = 0; i < m_numWorkers; ++i) {
+				double start = ({struct timeval v; gettimeofday(&v, NULL); (double)(v.tv_sec*1000.+v.tv_usec*0.001);});
+				done = [m_worker workWithDateFormaterWithFormatterBehavior10_0];
+				double stop = ({struct timeval v; gettimeofday(&v, NULL); (double)(v.tv_sec*1000.+v.tv_usec*0.001);});
+				m_sum += stop - start;
+			}
+			break;
+			
+		case NSDateFormatterInitWithDateFormat10_4:
+			for (int i = 0; i < m_numWorkers; ++i) {
+				double start = ({struct timeval v; gettimeofday(&v, NULL); (double)(v.tv_sec*1000.+v.tv_usec*0.001);});
+				done = [m_worker workWithDateFormaterWithFormatterBehavior10_4];
+				double stop = ({struct timeval v; gettimeofday(&v, NULL); (double)(v.tv_sec*1000.+v.tv_usec*0.001);});
+				m_sum += stop - start;
+			}
+			break;
+			
+		default:
+			break;
 	}
-	else {
-		for (int i = 0; i < m_numWorkers; ++i) {
-			double start = ({struct timeval v; gettimeofday(&v, NULL); (double)(v.tv_sec*1000.+v.tv_usec*0.001);});
-			done = [m_worker workWithoutDateFormater];
-			double stop = ({struct timeval v; gettimeofday(&v, NULL); (double)(v.tv_sec*1000.+v.tv_usec*0.001);});
-			m_sum += stop - start;
-		}		
-	}
-
+	
 	printf("Thread %d: Time around = %f sec\n", [self.name intValue], m_sum * 0.001);
 	printf("Thread %d: Time inside = %f sec\n", [self.name intValue], m_worker.sum * 0.001);
 	

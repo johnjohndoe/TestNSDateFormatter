@@ -14,18 +14,32 @@
 	m_order = [[Order alloc] init];
 }
 
-- (IBAction)withDateFormatterPressed:(id)sender {
+- (IBAction)withNSDateFormatterInitPressed:(id)sender {
 
-	printf("\nWith NSDateFormatter.\n-------------------------------------\n");
+	printf("\nWith NSDateFormatterInit.\n-------------------------------------\n");
 	[m_order setNumThreads:[m_numThreads intValue]];
-	[m_order orderWorkWithDateFormatter:YES];
+	[m_order orderWorkWithFormatterType:NSDateFormatterInit];
+}
+
+- (IBAction)withNSDateFormatterInitWithDateFormat10_0Pressed:(id)sender {
+	
+	printf("\nWith NSDateFormatterInitWithDateFormat10_0.\n-------------------------------------\n");
+	[m_order setNumThreads:[m_numThreads intValue]];
+	[m_order orderWorkWithFormatterType:NSDateFormatterInitWithDateFormat10_0];
+}
+
+- (IBAction)withNSDateFormatterInitWithDateFormat10_4Pressed:(id)sender {
+	
+	printf("\nWith NSDateFormatterInitWithDateFormat10_4.\n-------------------------------------\n");
+	[m_order setNumThreads:[m_numThreads intValue]];
+	[m_order orderWorkWithFormatterType:NSDateFormatterInitWithDateFormat10_4];
 }
 
 - (IBAction)withoutDateFormatterPressed:(id)sender {
 
 	printf("\nWithout NSDateFormatter.\n-------------------------------------\n");
 	[m_order setNumThreads:[m_numThreads intValue]];
-	[m_order orderWorkWithDateFormatter:NO];
+	[m_order orderWorkWithFormatterType:NoNSDateFormatter];
 }
 
 @end

@@ -1,4 +1,5 @@
 #import <Cocoa/Cocoa.h>
+#import "WorkerThread.h"
 
 
 @interface Order : NSObject {
@@ -8,7 +9,7 @@
 
 @property (readwrite) int numThreads;
 
-- (void)orderWorkWithDateFormatter:(BOOL)includeDateFormatter;
+- (void)orderWorkWithFormatterType:(FormatterType)formatterType;
 - (void)printName:(NSString*)name;
 
 @end

@@ -1,5 +1,4 @@
 #import "Order.h"
-#import "WorkerThread.h"
 
 
 @implementation Order
@@ -16,10 +15,10 @@
 @synthesize numThreads = m_numThreads;
 
 
-- (void)orderWorkWithDateFormatter:(BOOL)includeDateFormatter {
+- (void)orderWorkWithFormatterType:(FormatterType)formatterType {
 	
 	for (int i = 1; i <= m_numThreads; ++i) {
-		WorkerThread* workerThread = [[WorkerThread alloc] initWithDateFormatter:includeDateFormatter andSyncObject:self andSyncFunction:@selector(printName:)];
+		WorkerThread* workerThread = [[WorkerThread alloc] initWithDateFormatter:formatterType andSyncObject:self andSyncFunction:@selector(printName:)];
 		[workerThread setName:[NSString stringWithFormat:@"%d", i]];
 		[workerThread start];
 	}

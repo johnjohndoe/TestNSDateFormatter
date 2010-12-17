@@ -9,6 +9,8 @@
 @property (readonly) float sum;
 
 - (BOOL)workWithoutDateFormater;
-- (BOOL)workWithDateFormater;
+- (BOOL)workWithDateFormatterInit;
+- (BOOL)workWithDateFormaterWithFormatterBehavior10_0;
+- (BOOL)workWithDateFormaterWithFormatterBehavior10_4;
 
 @end
